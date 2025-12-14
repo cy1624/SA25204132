@@ -1,0 +1,17 @@
+Package: SA25204132
+Type: Package
+Title: SA25204132
+Version: 1.0
+Date: 2025-12-09
+Author: Yufeng Cheng
+Maintainer: Yufeng Cheng <chengyufeng909@gmail.com>
+Description: Several functions for clustering high-dimensional time series including their cpp version.
+License: GPL (>= 2)
+Imports: Rcpp (>= 1.1.0), RcppArmadillo, rbenchmark, magrittr, snowfall, boot, lpSolve, microbenchmark, stats, DAAG, bootstrap, gtools
+Suggests: knitr, rmarkdown
+LinkingTo: Rcpp, RcppArmadillo
+RoxygenNote: 7.3.3
+Encoding: UTF-8
+VignetteBuilder: knitr
+URL: http://github.com/cy1624/SA25204132
+BugReports: http://github.com/cy1624/SA25204132/issues

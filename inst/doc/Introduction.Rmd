@@ -1,0 +1,87 @@
+---
+title: "Introduction to SA25204132"
+author: "Yufeng CHneg"
+date: "2025-12-14"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to SA25204132}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r}
+require(microbenchmark)
+require(SA25204132)
+```
+
+Zhang et al.(2024) proposed a five-step algorithm for clustering high-dimensional time series as followings. See more in https://doi.org/10.1080/01621459.2023.2183132.
+
+Step 1 (Estimation for the number of factors.) For $0 \leq k \leq k_0$, let $\hat{\lambda}_{k,1} \geq \cdots \geq \hat{\lambda}_{k,p} \geq 0$ be the eigenvalues of matrix $\hat\Sigma_{y}(k)\hat\Sigma_{y}(k)^T.$ For a pre-specified positive integer $J_0 \leq p$, put$\hat{R}_0 = 1$
+and
+
+$$\hat{R}_j = \sum_{k=0}^{k_0} \hat{\lambda}_{k,j} / \sum_{k=0}^{k_0} \hat{\lambda}_{k,j+1}, \quad 1 \leq j \leq J_0. $$
+
+We say that $\hat{R}_s$ attains a local maximum if $\hat{R}_s > \max\{\hat{R}_{s-1}, \hat{R}_{s+1}\}$. Let $\hat{R}_{\hat{\tau}_1}$ and $\hat{R}_{\hat{\tau}_2}$ be the two largest local maximums among $\hat{R}_1, \ldots, \hat{R}_{J_0-1}$. The estimators for the numbers of factors are then defined as
+
+$$
+\hat{r}_0 = \min\{\hat{\tau}_1, \hat{\tau}_2\}, \quad \hat{r}_0 + \hat{r} = \max\{\hat{\tau}_1, \hat{\tau}_2\}.
+$$
+
+Step 2 (Estimation for the loadings for common factors.) Let $\hat{\mathbf{y}}_{1}, \ldots, \hat{\mathbf{y}}_{p}$ be the orthonormal eigenvectors of matrix $\hat{\mathbf{M}}$, arranged according to the descending order of the corresponding eigenvalues. The estimated loading matrix for the common factors is
+
+$$\hat{\mathbf{A}} = (\hat{\mathbf{y}}_{1}, \ldots, \hat{\mathbf{y}}_{\hat r_0}).$$
+
+Step 3 (Estimation for the loadings for cluster-specific factors.) Replace $\mathbf{y}_{t}$ by $(\mathbf{I}_{p} - \hat{\mathbf{A}}\hat{\mathbf{A}}^{\top})\mathbf{y}_{t}$ in (11), and repeat the eigenanalysis as in Step 2 above but now denote the corresponding orthonormal eigenvectors by $\hat{\mathbf{\xi}}_{1}, \ldots, \hat{\mathbf{\xi}}_{p}$. The estimated loading matrix for the cluster-specific factors is
+
+$$\hat{\mathbf{B}} = (\hat{\mathbf{\xi}}_{1}, \ldots, \hat{\mathbf{\xi}}_{\hat r}).$$
+
+Step 4 (Identification for the components not belonging to any clusters.) Let $\hat{\mathbf{b}}_{1}, \ldots, \hat{\mathbf{b}}_{p}$ denote the row vectors of $\mathbf{B}$. Then the identified index set for the components of $\mathbf{y}_{t}$ not belonging to any clusters is
+
+$$\hat{\mathbf{J}}_{d+1} = \{j : 1 \leq j \leq p, \|\hat{\mathbf{b}}_{j}\| \leq \omega_{p}\},$$
+
+where $\omega_{p} > 0$ is a constant satisfying the conditions $\omega_{p} = o(p^{\delta/2-1/2}), p^{-1/2}\omega_{p}^{-1} = o(1)$ and $\frac{p^{\delta}n^{-1}r + p^{-\delta}}{p^{1-\delta}\omega_{p}^{2}} = o(1)$.
+
+Step 5 (K-means clustering.) Denote by $\hat{d}$ the number of eigenvalues of $\|\hat{\mathbf{B}}\hat{\mathbf{B}}^{\top}|$ greater than $1 - \log^{-1} n$, which is taken as an upper bound of the number of clusters. Let $\hat{p}_{0} = p - |\hat{\mathbf{J}}_{d+1}|$, and $\hat{\mathbf{F}}$ be the $\hat{p}_{0} \times \hat{\mathbf{r}}$ matrix obtained from $\hat{\mathbf{B}}$ by removing the rows with their indices in $\hat{\mathbf{J}}_{d+1}$. Let $\hat{\mathbf{f}}_{1}, \ldots, \hat{\mathbf{f}}_{p_{0}}$ denote the $\hat{p}_{0}$ rows of $\hat{\mathbf{F}}$. Let $\hat{\mathbf{R}}$ be the $\hat{p}_{0} \times \hat{p}_{0}$ matrix with the $(\ell, m)$th element
+
+$$\hat{p}_{\ell,m} = \left| \hat{\mathbf{f}}_{\ell}^{\top} \hat{\mathbf{f}}_{m} \right| / \left| \hat{\mathbf{f}}_{\ell}^{\top} \hat{\mathbf{f}}_{\ell} \cdot \hat{\mathbf{f}}_{m}^{\top} \hat{\mathbf{f}}_{m} \right|^{1/2}, \quad 1 \leq \ell, m \leq \hat{p}_{0}.$$
+
+Perform the K-means clustering (with $L^{2}$-distance) for the $\hat{p}_{0}$ rows of $\hat{\mathbf{R}}$ to form the $d$ clusters, where $d \leq \hat{d}$ is chosen such that the within-cluster-sum of $L^{2}$-distances (to the cluster center points) are stabilized.
+
+We conduct several functions for this algorithm: \code{FactorNum} for step 1, \code{Loadings_Factor} for step 2 and step 3, \code{Clusters} for step 4 and step 5. Since it is a time-consuming task to perform step 1-3 on a high-dimensional dataset, we also rebuild the first two functions with Rcpp, called \code{FactorNum_cpp} and \code{Loadings_Factor_cpp}, respectively. Here is a simple benchmark for these functions.
+
+```{r}
+data("CSI300_2")
+microbenchmark(FactorNum(CSI300_2), FactorNum_cpp(CSI300_2), times = 20L)
+
+microbenchmark(Loadings_Factor(CSI300_2, r=c(1,13)), 
+               Loadings_Factor_cpp(CSI300_2, r=c(1,13)), 
+               times = 20L)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

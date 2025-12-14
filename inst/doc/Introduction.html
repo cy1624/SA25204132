@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Yufeng CHneg" />
+
+<meta name="date" content="2025-12-14" />
+
+<title>Introduction to SA25204132</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to SA25204132</h1>
+<h4 class="author">Yufeng CHneg</h4>
+<h4 class="date">2025-12-14</h4>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">require</span>(microbenchmark)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">require</span>(SA25204132)</span></code></pre></div>
+<pre><code>## Loading required package: SA25204132</code></pre>
+<p>Zhang et al.(2024) proposed a five-step algorithm for clustering
+high-dimensional time series as followings. See more in <a href="https://doi.org/10.1080/01621459.2023.2183132" class="uri">https://doi.org/10.1080/01621459.2023.2183132</a>.</p>
+<p>Step 1 (Estimation for the number of factors.) For <span class="math inline">\(0 \leq k \leq k_0\)</span>, let <span class="math inline">\(\hat{\lambda}_{k,1} \geq \cdots \geq
+\hat{\lambda}_{k,p} \geq 0\)</span> be the eigenvalues of matrix <span class="math inline">\(\hat\Sigma_{y}(k)\hat\Sigma_{y}(k)^T.\)</span> For
+a pre-specified positive integer <span class="math inline">\(J_0 \leq
+p\)</span>, put<span class="math inline">\(\hat{R}_0 = 1\)</span>
+and</p>
+<p><span class="math display">\[\hat{R}_j = \sum_{k=0}^{k_0}
+\hat{\lambda}_{k,j} / \sum_{k=0}^{k_0} \hat{\lambda}_{k,j+1}, \quad 1
+\leq j \leq J_0. \]</span></p>
+<p>We say that <span class="math inline">\(\hat{R}_s\)</span> attains a
+local maximum if <span class="math inline">\(\hat{R}_s &gt;
+\max\{\hat{R}_{s-1}, \hat{R}_{s+1}\}\)</span>. Let <span class="math inline">\(\hat{R}_{\hat{\tau}_1}\)</span> and <span class="math inline">\(\hat{R}_{\hat{\tau}_2}\)</span> be the two largest
+local maximums among <span class="math inline">\(\hat{R}_1, \ldots,
+\hat{R}_{J_0-1}\)</span>. The estimators for the numbers of factors are
+then defined as</p>
+<p><span class="math display">\[
+\hat{r}_0 = \min\{\hat{\tau}_1, \hat{\tau}_2\}, \quad \hat{r}_0 +
+\hat{r} = \max\{\hat{\tau}_1, \hat{\tau}_2\}.
+\]</span></p>
+<p>Step 2 (Estimation for the loadings for common factors.) Let <span class="math inline">\(\hat{\mathbf{y}}_{1}, \ldots,
+\hat{\mathbf{y}}_{p}\)</span> be the orthonormal eigenvectors of matrix
+<span class="math inline">\(\hat{\mathbf{M}}\)</span>, arranged
+according to the descending order of the corresponding eigenvalues. The
+estimated loading matrix for the common factors is</p>
+<p><span class="math display">\[\hat{\mathbf{A}} =
+(\hat{\mathbf{y}}_{1}, \ldots, \hat{\mathbf{y}}_{\hat
+r_0}).\]</span></p>
+<p>Step 3 (Estimation for the loadings for cluster-specific factors.)
+Replace <span class="math inline">\(\mathbf{y}_{t}\)</span> by <span class="math inline">\((\mathbf{I}_{p} -
+\hat{\mathbf{A}}\hat{\mathbf{A}}^{\top})\mathbf{y}_{t}\)</span> in (11),
+and repeat the eigenanalysis as in Step 2 above but now denote the
+corresponding orthonormal eigenvectors by <span class="math inline">\(\hat{\mathbf{\xi}}_{1}, \ldots,
+\hat{\mathbf{\xi}}_{p}\)</span>. The estimated loading matrix for the
+cluster-specific factors is</p>
+<p><span class="math display">\[\hat{\mathbf{B}} =
+(\hat{\mathbf{\xi}}_{1}, \ldots, \hat{\mathbf{\xi}}_{\hat
+r}).\]</span></p>
+<p>Step 4 (Identification for the components not belonging to any
+clusters.) Let <span class="math inline">\(\hat{\mathbf{b}}_{1}, \ldots,
+\hat{\mathbf{b}}_{p}\)</span> denote the row vectors of <span class="math inline">\(\mathbf{B}\)</span>. Then the identified index set
+for the components of <span class="math inline">\(\mathbf{y}_{t}\)</span> not belonging to any
+clusters is</p>
+<p><span class="math display">\[\hat{\mathbf{J}}_{d+1} = \{j : 1 \leq j
+\leq p, \|\hat{\mathbf{b}}_{j}\| \leq \omega_{p}\},\]</span></p>
+<p>where <span class="math inline">\(\omega_{p} &gt; 0\)</span> is a
+constant satisfying the conditions <span class="math inline">\(\omega_{p} = o(p^{\delta/2-1/2}),
+p^{-1/2}\omega_{p}^{-1} = o(1)\)</span> and <span class="math inline">\(\frac{p^{\delta}n^{-1}r +
+p^{-\delta}}{p^{1-\delta}\omega_{p}^{2}} = o(1)\)</span>.</p>
+<p>Step 5 (K-means clustering.) Denote by <span class="math inline">\(\hat{d}\)</span> the number of eigenvalues of
+<span class="math inline">\(\|\hat{\mathbf{B}}\hat{\mathbf{B}}^{\top}|\)</span>
+greater than <span class="math inline">\(1 - \log^{-1} n\)</span>, which
+is taken as an upper bound of the number of clusters. Let <span class="math inline">\(\hat{p}_{0} = p -
+|\hat{\mathbf{J}}_{d+1}|\)</span>, and <span class="math inline">\(\hat{\mathbf{F}}\)</span> be the <span class="math inline">\(\hat{p}_{0} \times \hat{\mathbf{r}}\)</span>
+matrix obtained from <span class="math inline">\(\hat{\mathbf{B}}\)</span> by removing the rows
+with their indices in <span class="math inline">\(\hat{\mathbf{J}}_{d+1}\)</span>. Let <span class="math inline">\(\hat{\mathbf{f}}_{1}, \ldots,
+\hat{\mathbf{f}}_{p_{0}}\)</span> denote the <span class="math inline">\(\hat{p}_{0}\)</span> rows of <span class="math inline">\(\hat{\mathbf{F}}\)</span>. Let <span class="math inline">\(\hat{\mathbf{R}}\)</span> be the <span class="math inline">\(\hat{p}_{0} \times \hat{p}_{0}\)</span> matrix
+with the <span class="math inline">\((\ell, m)\)</span>th element</p>
+<p><span class="math display">\[\hat{p}_{\ell,m} = \left|
+\hat{\mathbf{f}}_{\ell}^{\top} \hat{\mathbf{f}}_{m} \right| / \left|
+\hat{\mathbf{f}}_{\ell}^{\top} \hat{\mathbf{f}}_{\ell} \cdot
+\hat{\mathbf{f}}_{m}^{\top} \hat{\mathbf{f}}_{m} \right|^{1/2}, \quad 1
+\leq \ell, m \leq \hat{p}_{0}.\]</span></p>
+<p>Perform the K-means clustering (with <span class="math inline">\(L^{2}\)</span>-distance) for the <span class="math inline">\(\hat{p}_{0}\)</span> rows of <span class="math inline">\(\hat{\mathbf{R}}\)</span> to form the <span class="math inline">\(d\)</span> clusters, where <span class="math inline">\(d \leq \hat{d}\)</span> is chosen such that the
+within-cluster-sum of <span class="math inline">\(L^{2}\)</span>-distances (to the cluster center
+points) are stabilized.</p>
+<p>We conduct several functions for this algorithm: for step 1, for step
+2 and step 3, for step 4 and step 5. Since it is a time-consuming task
+to perform step 1-3 on a high-dimensional dataset, we also rebuild the
+first two functions with Rcpp, called and , respectively. Here is a
+simple benchmark for these functions.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;CSI300_2&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">microbenchmark</span>(<span class="fu">FactorNum</span>(CSI300_2), <span class="fu">FactorNum_cpp</span>(CSI300_2), <span class="at">times =</span> <span class="dv">20</span><span class="dt">L</span>)</span></code></pre></div>
+<pre><code>## Unit: milliseconds
+##                     expr       min        lq      mean    median       uq
+##      FactorNum(CSI300_2) 1400.9545 1402.9001 1410.5732 1405.8650 1408.844
+##  FactorNum_cpp(CSI300_2)  365.0415  365.6558  366.4065  366.4848  366.885
+##       max neval
+##  1455.971    20
+##   368.546    20</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">microbenchmark</span>(<span class="fu">Loadings_Factor</span>(CSI300_2, <span class="at">r=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">13</span>)), </span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>               <span class="fu">Loadings_Factor_cpp</span>(CSI300_2, <span class="at">r=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">13</span>)), </span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>               <span class="at">times =</span> <span class="dv">20</span><span class="dt">L</span>)</span></code></pre></div>
+<pre><code>## Unit: milliseconds
+##                                         expr       min        lq      mean
+##      Loadings_Factor(CSI300_2, r = c(1, 13)) 2321.8458 2329.0854 2368.0943
+##  Loadings_Factor_cpp(CSI300_2, r = c(1, 13))  553.2186  555.2512  568.8309
+##     median        uq       max neval
+##  2333.9078 2350.9950 2629.1978    20
+##   559.0038  565.7877  617.8627    20</code></pre>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
